@@ -38,7 +38,7 @@ export type GeneratePersonalizedWorkoutPlanInput = z.infer<
 
 const ExerciseSchema = z.object({
   name: z.string().describe('O nome do exercício.'),
-  sets: z.string().describe('O número de séries. Ex: "3"'),
+  sets: z.string().describe('O número de séries. Ex: "3-4"'),
   reps: z.string().describe('A faixa de repetições. Ex: "10-12"'),
   rest: z.string().describe('O tempo de descanso entre as séries. Ex: "60s"'),
   gifUrl: z
@@ -88,31 +88,34 @@ const prompt = ai.definePrompt({
 **1. FILTRO DE EXERCÍCIOS POR NÍVEL (INEGOCIÁVEL):**
 
 *   **Se \`fitnessLevel\` for 'beginner' (Iniciante):**
-    *   **DIVISÃO DE TREINO OBRIGATÓRIA (ABC):** Você DEVE criar um plano de 3 dias seguindo estritamente esta divisão:
-        *   **Treino A (Push - Empurrar):** Foco em Peito, Ombros (anterior/lateral) e Tríceps. Deve incluir obrigatoriamente uma variação de Supino (com máquina ou halteres), uma variação de Desenvolvimento de Ombros e um exercício para Tríceps (ex: Tríceps Pulley).
-        *   **Treino B (Pull - Puxar):** Foco em Costas, Trapézio, Bíceps e ombros posteriores. Deve incluir obrigatoriamente uma Puxada Vertical (ex: Puxada Alta/Lat Pulldown), uma Remada (ex: Remada na máquina ou com halteres) e uma Rosca para Bíceps.
-        *   **Treino C (Legs - Pernas):** Foco em Quadríceps, Isquiotibiais (Posterior), Glúteos e Panturrilhas. Deve incluir obrigatoriamente Leg Press ou uma variação segura de agachamento (ex: Agachamento Goblet), Cadeira Extensora e Cadeira Flexora.
-    *   **VOLUME E INTENSIDADE:**
-        *   Cada treino deve ter entre 4 a 5 exercícios no total.
-        *   Para cada exercício, prescreva 3 séries.
-        *   A faixa de repetições deve ser entre 10 e 15, focando no aprendizado motor e resistência.
+    *   **NOVA REGRA MESTRA (OBRIGATÓRIA):** Você DEVE ignorar qualquer pedido de 'Full Body' e gerar estritamente uma divisão ABC (3 dias) com foco em hipertrofia clássica. A estrutura abaixo é inegociável.
+    *   **Estrutura Obrigatória dos Dias:**
+        *   **Treino A (Empurrar):** Foco em Peito, Ombros (anterior/lateral) e Tríceps.
+            *   **Volume Mínimo:** 2 exercícios para Peito, 1 exercício para Ombros (ex: Desenvolvimento), e 2 exercícios para Tríceps. O total deve ser de 5 a 6 exercícios.
+        *   **Treino B (Puxar):** Foco em Costas, Trapézio, Bíceps, Antebraço e Ombros (posterior).
+            *   **Volume Mínimo:** 2 exercícios para Costas (1 puxada vertical, 1 remada), 1 exercício para Ombro Posterior/Trapézio, e 2 exercícios para Bíceps. O total deve ser de 5 a 6 exercícios.
+        *   **Treino C (Pernas Completo):** Foco em Quadríceps, Isquiotibiais (Posterior), Glúteos e Panturrilhas.
+            *   **Volume Mínimo:** 1 exercício tipo Agachamento (ex: Leg Press ou Goblet Squat seguro), 1 Cadeira Extensora, 1 Cadeira Flexora, 1 exercício focado em Glúteo (ex: Elevação Pélvica), e 1 exercício para Panturrilhas. O total deve ser de 5 exercícios.
+    *   **REGRAS DE VOLUME PARA INICIANTES:**
+        *   **Séries:** Padronize em 3 a 4 séries por exercício.
+        *   **Repetições:** Padronize estritamente na faixa de 10 a 12 repetições.
     *   **SEGURANÇA (INEGOCIÁVEL):**
-        *   **ABSOLUTAMENTE PROIBIDO:** NÃO inclua exercícios complexos com barra livre, como Agachamento Livre com Barra, Levantamento Terra, Supino Reto com Barra, ou qualquer levantamento olímpico. A prioridade é a segurança e a técnica correta.
+        *   **ABSOLUTAMENTE PROIBIDO:** NÃO inclua exercícios complexos com barra livre, como Agachamento Livre com Barra, Levantamento Terra, Supino Reto com Barra, ou qualquer levantamento olímpico. A prioridade é a segurança e o uso de máquinas, halteres e cabos.
 
 *   **Se \`fitnessLevel\` for 'intermediate' (Intermediário) ou 'advanced' (Avançado):**
     *   **PERMITIDO:** Você PODE incluir exercícios compostos com peso livre (Agachamento com Barra, Levantamento Terra, etc.).
-    *   **Volume:** Utilize um volume de médio a alto.
+    *   **Volume:** Utilize um volume de médio a alto (5-7 exercícios por dia).
     *   **Divisão de Treino:** Crie uma divisão 'ABC' (Push/Pull/Legs) ou uma divisão 'ABCD'.
 
 **2. PRINCÍPIO DA ESPECIFICIDADE (FOCO NO OBJETIVO):**
 
 *   **Se \`goals\` for 'Ganhar Massa Muscular (Hipertrofia)' ou 'Definição Muscular':**
-    *   **Faixa de Repetições:** Foque primariamente na faixa de 8 a 12 repetições (exceto para iniciantes, que devem seguir a regra de 10-15 reps).
+    *   **Faixa de Repetições:** Foque primariamente na faixa de 8 a 12 repetições (para iniciantes, use estritamente 10-12 reps como definido na regra 1).
     *   **Descanso:** Defina os períodos de descanso entre 60 e 90 segundos.
 
 *   **Se \`goals\` for 'Perder Gordura / Emagrecimento' ou 'Condicionamento / Resistência':**
     *   **Estrutura:** Considere usar super-séries (bi-sets) ou manter os períodos de descanso curtos (entre 45 e 60 segundos) para aumentar a demanda metabólica (exceto para iniciantes).
-    *   **Faixa de Repetições:** A faixa de repetições é 12 a 15 (para iniciantes, mantenha 10-15).
+    *   **Faixa de Repetições:** A faixa de repetições é 12 a 15 (para iniciantes, use estritamente 10-12 reps como definido na regra 1).
 
 **3. ESTRUTURA DA SESSÃO DE TREINO (OBRIGATÓRIA):**
 
