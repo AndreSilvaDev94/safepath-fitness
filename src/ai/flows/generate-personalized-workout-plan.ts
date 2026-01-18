@@ -29,10 +29,11 @@ const ExerciseSchema = z.object({
   sets: z.string().describe('O número de séries. Ex: "3"'),
   reps: z.string().describe('A faixa de repetições. Ex: "10-12"'),
   rest: z.string().describe('O tempo de descanso entre as séries. Ex: "60s"'),
-  videoSearchTerm: z
+  gifUrl: z
     .string()
+    .url()
     .describe(
-      'Um termo de busca conciso para encontrar um vídeo de execução no YouTube.'
+      'A URL para um GIF animado que demonstra a execução correta do exercício. A URL deve apontar diretamente para o arquivo .gif.'
     ),
 });
 
@@ -74,7 +75,7 @@ const prompt = ai.definePrompt({
   - Objetivos: {{{goals}}}
   - Equipamento Disponível: {{{availableEquipment}}}
 
-  Crie um plano de treino claro, conciso e motivador. Para 'videoSearchTerm', use o nome do exercício em inglês para melhores resultados de busca.`,
+  Crie um plano de treino claro, conciso e motivador. Para 'gifUrl', forneça um link direto para um GIF animado (.gif) que demonstre a execução do exercício.`,
 });
 
 const generatePersonalizedWorkoutPlanFlow = ai.defineFlow(

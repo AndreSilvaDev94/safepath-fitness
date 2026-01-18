@@ -78,9 +78,13 @@
         "sets": { "type": "string" },
         "reps": { "type": "string" },
         "rest": { "type": "string" },
-        "videoSearchTerm": { "type": "string" }
+        "gifUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL for an animated GIF demonstrating the exercise."
+        }
       },
-      "required": ["name", "sets", "reps", "rest", "videoSearchTerm"]
+      "required": ["name", "sets", "reps", "rest", "gifUrl"]
     }
   },
   "auth": {

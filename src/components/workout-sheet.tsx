@@ -14,8 +14,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Video } from 'lucide-react';
 import type { GeneratedWorkoutPlan, Exercise } from '@/lib/workout-types';
 
 interface WorkoutSheetProps {
@@ -64,16 +62,15 @@ export default function WorkoutSheet({ plan }: WorkoutSheetProps) {
                             <p className="text-xs text-muted-foreground">Descanso</p>
                           </div>
                         </div>
-                        <Button
-                          variant="outline"
-                          className="w-full"
-                          asChild
-                        >
-                          <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.videoSearchTerm)}`} target="_blank" rel="noopener noreferrer">
-                            <Video className="mr-2 h-4 w-4" />
-                            Ver Execução no YouTube
-                          </a>
-                        </Button>
+                        {exercise.gifUrl && (
+                          <div className="mt-4 overflow-hidden rounded-lg border">
+                            <img
+                              src={exercise.gifUrl}
+                              alt={`Animação do exercício ${exercise.name}`}
+                              className="w-full object-cover"
+                            />
+                          </div>
+                        )}
                       </div>
                     </AccordionContent>
                   </AccordionItem>

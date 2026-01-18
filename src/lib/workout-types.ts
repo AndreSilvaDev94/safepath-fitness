@@ -3,7 +3,7 @@ export interface Exercise {
   sets: string;
   reps: string;
   rest: string;
-  videoSearchTerm: string;
+  gifUrl: string;
 }
 
 export interface DaySchedule {
