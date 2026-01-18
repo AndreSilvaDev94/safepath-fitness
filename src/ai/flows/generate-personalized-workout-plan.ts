@@ -49,7 +49,7 @@ const ExerciseSchema = z.object({
 });
 
 const DayScheduleSchema = z.object({
-  day: z.string().describe('O nome do dia de treino. Ex: "Treino A (Empurrar)"'),
+  day: z.string().describe('O nome do dia de treino. Ex: "Treino A"'),
   exercises: z
     .array(ExerciseSchema)
     .describe('Uma lista de exercícios para este dia.'),
@@ -90,7 +90,7 @@ Se \`fitnessLevel\` for 'beginner', você DEVE IGNORAR QUALQUER OUTRA SOLICITAÇ
 
 ### ESTRUTURA RÍGIDA PARA INICIANTES (Divisão ABC)
 
-**1. Treino A (Push - Empurrar)**
+**1. Treino A**
 *   **Foco:** Peito, Ombros (anterior/lateral) e Tríceps.
 *   **Estrutura:** EXATAMENTE entre 4 a 5 exercícios no total.
 *   **Exercícios Obrigatórios (inclua variações seguras destes):**
@@ -100,7 +100,7 @@ Se \`fitnessLevel\` for 'beginner', você DEVE IGNORAR QUALQUER OUTRA SOLICITAÇ
     *   1x Tríceps na Polia (Pulley)
     *   Opcional: 1x Elevação Lateral para Ombros.
 
-**2. Treino B (Pull - Puxar)**
+**2. Treino B**
 *   **Foco:** Costas, Trapézio, Bíceps e Ombros (Posterior).
 *   **Estrutura:** EXATAMENTE entre 4 a 5 exercícios no total.
 *   **Exercícios Obrigatórios (inclua variações seguras destes):**
@@ -110,7 +110,7 @@ Se \`fitnessLevel\` for 'beginner', você DEVE IGNORAR QUALQUER OUTRA SOLICITAÇ
     *   1x Exercício para Posterior de Ombro (ex: Crucifixo inverso na máquina)
     *   Opcional: 1x Rosca Martelo.
 
-**3. Treino C (Legs - Pernas)**
+**3. Treino C**
 *   **Foco:** Quadríceps, Posterior de Coxa, Glúteos e Panturrilha.
 *   **Estrutura:** EXATAMENTE entre 4 a 5 exercícios no total.
 *   **Exercícios Obrigatórios (inclua variações seguras destes):**
