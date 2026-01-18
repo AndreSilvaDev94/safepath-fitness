@@ -1,22 +1,23 @@
 'use client';
 
-import { useUser, useCollection } from '@/firebase';
-import { getFirestore, collection, query, orderBy, limit } from 'firebase/firestore';
+import { useUser, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Loader2, Dumbbell, User } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import WorkoutSheet from '@/components/workout-sheet';
 import type { GeneratedWorkoutPlan } from '@/lib/workout-types';
+import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
   const { user, loading: userLoading } = useUser();
   const router = useRouter();
-  const db = getFirestore();
+  const db = useFirestore();
 
-  const plansQuery = useMemo(() => {
-    if (!user) return null;
+  const plansQuery = useMemoFirebase(() => {
+    if (!db || !user) return null;
     return query(
       collection(db, 'users', user.uid, 'plans'),
       orderBy('createdAt', 'desc'),
@@ -24,7 +25,7 @@ export default function DashboardPage() {
     );
   }, [db, user]);
 
-  const { data: plans, loading: plansLoading } = useCollection(plansQuery);
+  const { data: plans, isLoading: plansLoading } = useCollection(plansQuery);
 
   useEffect(() => {
     if (!userLoading && !user) {

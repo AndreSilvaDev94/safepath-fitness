@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { PlanGenerator } from '@/components/plan-generator';
 import WorkoutSheet from '@/components/workout-sheet';
 import type { GeneratedWorkoutPlan } from '@/ai/flows/generate-personalized-workout-plan';
-import { useUser } from '@/firebase';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { useUser, useAuth, useFirestore } from '@/firebase';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -18,6 +18,8 @@ export default function Home() {
   const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { user, loading: userLoading } = useUser();
+  const auth = useAuth();
+  const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -33,15 +35,13 @@ export default function Home() {
     try {
       let currentUser = user;
       if (!currentUser) {
-        const auth = getAuth();
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
         currentUser = result.user;
       }
 
       if (currentUser) {
-        const db = getFirestore();
-        await addDoc(collection(db, 'users', currentUser.uid, 'plans'), {
+        await addDoc(collection(firestore, 'users', currentUser.uid, 'plans'), {
           ...generatedPlan,
           createdAt: serverTimestamp(),
           userId: currentUser.uid,
