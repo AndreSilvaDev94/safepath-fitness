@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import {
   Card,
   CardContent,
@@ -63,11 +64,12 @@ export default function WorkoutSheet({ plan }: WorkoutSheetProps) {
                           </div>
                         </div>
                         {exercise.gifUrl && (
-                          <div className="mt-4 overflow-hidden rounded-lg border">
-                            <img
+                          <div className="relative mt-4 aspect-square overflow-hidden rounded-lg border">
+                            <Image
                               src={exercise.gifUrl}
                               alt={`Animação do exercício ${exercise.name}`}
-                              className="w-full object-cover"
+                              fill
+                              className="object-cover"
                             />
                           </div>
                         )}

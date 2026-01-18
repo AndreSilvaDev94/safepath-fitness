@@ -44,8 +44,9 @@ const ExerciseSchema = z.object({
   gifUrl: z
     .string()
     .url()
+    .or(z.literal(''))
     .describe(
-      'A URL para um GIF animado que demonstra a execução correta do exercício. A URL deve apontar diretamente para o arquivo .gif.'
+      "A URL para um GIF animado que demonstra o exercício. A URL deve apontar diretamente para um arquivo .gif. Se nenhum GIF for encontrado, retorne uma string vazia ''."
     ),
 });
 
@@ -116,10 +117,15 @@ const prompt = ai.definePrompt({
     2.  **Exercícios Isolados (Monoarticulares):** Continue com movimentos de articulação única que visam músculos menores (ex: Rosca Bíceps, Extensão de Tríceps, Cadeira Extensora).
     3.  **Core/Abdômen:** Conclua com 1 ou 2 exercícios para o core/abdômen, se apropriado para o dia.
 
-**4. FORMATO DE SAÍDA FINAL:**
+**4. GERAÇÃO DE GIF (OBRIGATÓRIO):**
+
+*   Para o campo \`gifUrl\`, você DEVE encontrar um GIF correspondente no site 'weighttraining.guide'. A maioria dos gifs está em 'https://weighttraining.guide/wp-content/uploads/'.
+*   **Você DEVE fornecer um link direto para o arquivo .gif.** NÃO forneça um link para uma página HTML.
+*   Se você não conseguir encontrar um GIF para um exercício específico neste site, deixe o campo \`gifUrl\` como uma string vazia ("").
+
+**5. FORMATO DE SAÍDA FINAL:**
 
 *   Responda estritamente no formato JSON definido no esquema de saída.
-*   Para 'gifUrl', forneça um link direto para um GIF animado (.gif) que demonstre a execução do exercício.
 *   O \`title\` do plano deve ser motivador e refletir o objetivo e o nível do usuário.`,
 });
 
