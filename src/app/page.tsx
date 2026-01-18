@@ -45,7 +45,7 @@ export default function Home() {
         addDocumentNonBlocking(collection(firestore, 'users', currentUser.uid, 'workoutPlans'), {
           ...generatedPlan,
           createdAt: serverTimestamp(),
-          userId: currentUser.uid,
+          userProfileId: currentUser.uid,
         });
         
         toast({
