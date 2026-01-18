@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { PlanGenerator } from '@/components/plan-generator';
 import WorkoutSheet from '@/components/workout-sheet';
 import type { GeneratedWorkoutPlan } from '@/ai/flows/generate-personalized-workout-plan';
-import { useUser, useAuth, useFirestore } from '@/firebase';
+import { useUser, useAuth, useFirestore, addDocumentNonBlocking } from '@/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -29,19 +29,19 @@ export default function Home() {
   };
 
   const handleSaveAndStart = async () => {
-    if (!generatedPlan) return;
+    if (!generatedPlan || !firestore) return;
     setIsSaving(true);
     
     try {
       let currentUser = user;
-      if (!currentUser) {
+      if (!currentUser && auth) {
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
         currentUser = result.user;
       }
 
       if (currentUser) {
-        await addDoc(collection(firestore, 'users', currentUser.uid, 'plans'), {
+        addDocumentNonBlocking(collection(firestore, 'users', currentUser.uid, 'plans'), {
           ...generatedPlan,
           createdAt: serverTimestamp(),
           userId: currentUser.uid,
@@ -55,11 +55,11 @@ export default function Home() {
         router.push('/dashboard');
       }
     } catch (error) {
-      console.error("Error saving workout plan: ", error);
+      console.error("Error during save/login process: ", error);
       toast({
         variant: 'destructive',
-        title: 'Erro ao Salvar',
-        description: 'Houve um problema ao salvar seu plano. Tente novamente.',
+        title: 'Erro no Login ou ao Salvar',
+        description: 'Não foi possível fazer login ou salvar seu plano. Verifique se os pop-ups estão ativados e tente novamente.',
       });
     } finally {
       setIsSaving(false);
