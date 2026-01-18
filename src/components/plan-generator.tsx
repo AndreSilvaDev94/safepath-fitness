@@ -36,16 +36,16 @@ import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   fitnessLevel: z.enum(['beginner', 'intermediate', 'advanced'], {
-    required_error: 'Please select your fitness level.',
+    required_error: 'Por favor, selecione seu nível de condicionamento físico.',
   }),
   goals: z
     .string()
-    .min(10, 'Please describe your goals in at least 10 characters.')
-    .max(200, 'Goals cannot exceed 200 characters.'),
+    .min(10, 'Por favor, descreva seus objetivos em pelo menos 10 caracteres.')
+    .max(200, 'Os objetivos não podem exceder 200 caracteres.'),
   availableEquipment: z
     .string()
-    .min(5, 'Please list equipment in at least 5 characters.')
-    .max(200, 'Equipment list cannot exceed 200 characters.'),
+    .min(5, 'Por favor, liste o equipamento em pelo menos 5 caracteres.')
+    .max(200, 'A lista de equipamentos não pode exceder 200 caracteres.'),
 });
 
 type PlanGeneratorProps = {
@@ -79,11 +79,11 @@ export function PlanGenerator({
     if (result.error) {
       toast({
         variant: 'destructive',
-        title: 'Error Generating Plan',
+        title: 'Erro ao Gerar Plano',
         description:
           typeof result.error === 'string'
             ? result.error
-            : 'Please check the form for errors.',
+            : 'Por favor, verifique o formulário em busca de erros.',
       });
     } else if (result.data) {
       onPlanGenerated(result.data);
@@ -95,10 +95,10 @@ export function PlanGenerator({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Generate a New Workout Plan</DialogTitle>
+          <DialogTitle>Gerar um Novo Plano de Treino</DialogTitle>
           <DialogDescription>
-            Tell us about yourself, and our AI will create a personalized plan
-            for you.
+            Conte-nos sobre você, e nossa IA criará um plano personalizado
+            para você.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -108,20 +108,20 @@ export function PlanGenerator({
               name="fitnessLevel"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your Fitness Level</FormLabel>
+                  <FormLabel>Seu Nível de Condicionamento Físico</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select your current level" />
+                        <SelectValue placeholder="Selecione seu nível atual" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="beginner">Beginner</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
+                      <SelectItem value="beginner">Iniciante</SelectItem>
+                      <SelectItem value="intermediate">Intermediário</SelectItem>
+                      <SelectItem value="advanced">Avançado</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -133,10 +133,10 @@ export function PlanGenerator({
               name="goals"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your Fitness Goals</FormLabel>
+                  <FormLabel>Seus Objetivos de Fitness</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="e.g., build muscle, lose weight, improve endurance"
+                      placeholder="ex: ganhar massa muscular, perder peso, melhorar a resistência"
                       {...field}
                     />
                   </FormControl>
@@ -149,10 +149,10 @@ export function PlanGenerator({
               name="availableEquipment"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Equipment You Have Access To</FormLabel>
+                  <FormLabel>Equipamento que Você Tem Acesso</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="e.g., dumbbells, resistance bands, pull-up bar"
+                      placeholder="ex: halteres, faixas de resistência, barra de pull-up"
                       {...field}
                     />
                   </FormControl>
@@ -165,10 +165,10 @@ export function PlanGenerator({
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
+                    Gerando...
                   </>
                 ) : (
-                  'Generate Plan'
+                  'Gerar Plano'
                 )}
               </Button>
             </DialogFooter>

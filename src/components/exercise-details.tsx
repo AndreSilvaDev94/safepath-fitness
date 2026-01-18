@@ -40,16 +40,16 @@ export function ExerciseDetails({ exercise }: ExerciseDetailsProps) {
           <div className="flex items-center gap-3">
             <CheckCircle className="h-5 w-5 text-muted-foreground" />
             <span className="font-medium">
-              {exercise.sets} Sets
+              {exercise.sets} Séries
             </span>
           </div>
           <div className="flex items-center gap-3">
             <Repeat className="h-5 w-5 text-muted-foreground" />
-            <span className="font-medium">{exercise.reps} Reps</span>
+            <span className="font-medium">{exercise.reps} Repetições</span>
           </div>
           <div className="flex items-center gap-3">
             <Clock className="h-5 w-5 text-muted-foreground" />
-            <span className="font-medium">{exercise.rest} Rest</span>
+            <span className="font-medium">{exercise.rest} Descanso</span>
           </div>
           <Button
             variant="outline"
@@ -57,13 +57,13 @@ export function ExerciseDetails({ exercise }: ExerciseDetailsProps) {
             onClick={() => setIsModalOpen(true)}
           >
             <Video className="mr-2 h-4 w-4" />
-            Watch Execution Guide
+            Ver Guia de Execução
           </Button>
         </div>
       </div>
       <Separator />
       <div>
-        <h4 className="mb-2 font-semibold">Log Your Workout</h4>
+        <h4 className="mb-2 font-semibold">Registre seu Treino</h4>
         <div className="space-y-2">
           {setsArray.map((setNumber) => (
             <div
@@ -72,13 +72,13 @@ export function ExerciseDetails({ exercise }: ExerciseDetailsProps) {
             >
               <Checkbox id={`set-${exercise.id}-${setNumber}`} />
               <Label htmlFor={`set-${exercise.id}-${setNumber}`}>
-                Set {setNumber} completed
+                Série {setNumber} concluída
               </Label>
             </div>
           ))}
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
-          Check the box after you complete a set. Keep up the great work!
+          Marque a caixa após completar uma série. Continue o bom trabalho!
         </p>
       </div>
       <ExerciseVideoModal

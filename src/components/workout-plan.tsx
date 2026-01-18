@@ -29,8 +29,7 @@ export default function WorkoutPlanDisplay({ plan }: WorkoutPlanProps) {
       <CardHeader>
         <CardTitle className="font-headline">{plan.name}</CardTitle>
         <CardDescription>
-          This is your current plan. Click on an exercise to see details and log
-          your sets.
+          Este é o seu plano atual. Clique em um exercício para ver os detalhes e registrar suas séries.
         </CardDescription>
       </CardHeader>
       <CardContent>

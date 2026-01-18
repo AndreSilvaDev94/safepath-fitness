@@ -33,7 +33,7 @@ export default function Home() {
           </a>
           <div className="ml-auto">
             <Button onClick={() => setIsGeneratorOpen(true)}>
-              Generate New Plan with AI
+              Gerar Novo Plano com IA
             </Button>
           </div>
         </nav>
@@ -46,10 +46,10 @@ export default function Home() {
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="mx-auto w-full max-w-6xl">
           <h1 className="text-3xl font-bold font-headline tracking-tight">
-            Your Dashboard
+            Seu Painel
           </h1>
           <p className="text-muted-foreground">
-            Welcome back! Here's your safe path for today. You're on the right track.
+            Bem-vindo de volta! Aqui está o seu caminho seguro para hoje. Você está no caminho certo.
           </p>
         </div>
 
@@ -57,10 +57,10 @@ export default function Home() {
           <div className="mx-auto w-full max-w-6xl">
             <Card className="bg-accent/50 border-accent">
               <CardHeader>
-                <CardTitle>Your New AI-Generated Workout Plan</CardTitle>
+                <CardTitle>Seu Novo Plano de Treino Gerado por IA</CardTitle>
                 <CardDescription>
-                  Here is the personalized workout plan created just for you.
-                  You can copy it and start following your new routine.
+                  Aqui está o plano de treino personalizado criado para você.
+                  Você pode copiá-lo e começar a seguir sua nova rotina.
                 </CardDescription>
               </CardHeader>
               <CardContent>

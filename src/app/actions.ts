@@ -8,8 +8,8 @@ import { z } from 'zod';
 
 const formSchema = z.object({
   fitnessLevel: z.enum(['beginner', 'intermediate', 'advanced']),
-  goals: z.string().min(10, 'Please describe your goals in more detail.'),
-  availableEquipment: z.string().min(5, 'Please list at least some equipment.'),
+  goals: z.string().min(10, 'Por favor, descreva seus objetivos com mais detalhes.'),
+  availableEquipment: z.string().min(5, 'Por favor, liste pelo menos algum equipamento.'),
 });
 
 export async function getWorkoutPlanAction(values: unknown) {
@@ -19,7 +19,7 @@ export async function getWorkoutPlanAction(values: unknown) {
 
   if (!validatedFields.success) {
     return {
-      error: 'Invalid form data.',
+      error: 'Dados do formulário inválidos.',
       details: validatedFields.error.flatten().fieldErrors,
     };
   }
@@ -29,6 +29,6 @@ export async function getWorkoutPlanAction(values: unknown) {
     return { data: result.workoutPlan };
   } catch (error) {
     console.error('Error generating workout plan:', error);
-    return { error: 'An unexpected error occurred. Please try again.' };
+    return { error: 'Ocorreu um erro inesperado. Por favor, tente novamente.' };
   }
 }

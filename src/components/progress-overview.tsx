@@ -23,7 +23,7 @@ interface ProgressOverviewProps {
 
 const chartConfig = {
   totalWeight: {
-    label: 'Total Weight',
+    label: 'Peso Total',
     color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig;
@@ -32,9 +32,9 @@ export default function ProgressOverview({ data }: ProgressOverviewProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-headline">Your Progress</CardTitle>
+        <CardTitle className="font-headline">Seu Progresso</CardTitle>
         <CardDescription>
-          Here's a look at your total weight lifted over the last few weeks.
+          Aqui está uma visão do seu peso total levantado nas últimas semanas.
         </CardDescription>
       </CardHeader>
       <CardContent>

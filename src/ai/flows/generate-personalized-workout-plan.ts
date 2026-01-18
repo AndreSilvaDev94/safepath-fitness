@@ -1,11 +1,11 @@
 'use server';
 
 /**
- * @fileOverview Generates a personalized workout plan based on user fitness level, goals, and available equipment.
+ * @fileOverview Gera um plano de treino personalizado com base no nível de condicionamento físico, objetivos e equipamentos disponíveis do usuário.
  *
- * - generatePersonalizedWorkoutPlan - A function that generates a personalized workout plan.
- * - GeneratePersonalizedWorkoutPlanInput - The input type for the generatePersonalizedWorkoutPlan function.
- * - GeneratePersonalizedWorkoutPlanOutput - The return type for the generatePersonalizedWorkoutPlan function.
+ * - generatePersonalizedWorkoutPlan - Uma função que gera um plano de treino personalizado.
+ * - GeneratePersonalizedWorkoutPlanInput - O tipo de entrada para a função generatePersonalizedWorkoutPlan.
+ * - GeneratePersonalizedWorkoutPlanOutput - O tipo de retorno para a função generatePersonalizedWorkoutPlan.
  */
 
 import {ai} from '@/ai/genkit';
@@ -14,18 +14,18 @@ import {z} from 'genkit';
 const GeneratePersonalizedWorkoutPlanInputSchema = z.object({
   fitnessLevel: z
     .enum(['beginner', 'intermediate', 'advanced'])
-    .describe('The fitness level of the user.'),
-  goals: z.string().describe('The fitness goals of the user.'),
+    .describe('O nível de condicionamento físico do usuário.'),
+  goals: z.string().describe('Os objetivos de fitness do usuário.'),
   availableEquipment: z
     .string()
-    .describe('The equipment available to the user.'),
+    .describe('O equipamento disponível para o usuário.'),
 });
 export type GeneratePersonalizedWorkoutPlanInput = z.infer<
   typeof GeneratePersonalizedWorkoutPlanInputSchema
 >;
 
 const GeneratePersonalizedWorkoutPlanOutputSchema = z.object({
-  workoutPlan: z.string().describe('The personalized workout plan.'),
+  workoutPlan: z.string().describe('O plano de treino personalizado.'),
 });
 export type GeneratePersonalizedWorkoutPlanOutput = z.infer<
   typeof GeneratePersonalizedWorkoutPlanOutputSchema
@@ -41,15 +41,15 @@ const prompt = ai.definePrompt({
   name: 'generatePersonalizedWorkoutPlanPrompt',
   input: {schema: GeneratePersonalizedWorkoutPlanInputSchema},
   output: {schema: GeneratePersonalizedWorkoutPlanOutputSchema},
-  prompt: `You are a personal trainer who specializes in creating workout plans for beginners.
+  prompt: `Você é um personal trainer especializado em criar planos de treino para iniciantes.
 
-  Based on the user's fitness level, goals, and available equipment, create a personalized workout plan.
+  Com base no nível de condicionamento físico, objetivos e equipamentos disponíveis do usuário, crie um plano de treino personalizado.
 
-  Fitness Level: {{{fitnessLevel}}}
-  Goals: {{{goals}}}
-  Available Equipment: {{{availableEquipment}}}
+  Nível de Condicionamento Físico: {{{fitnessLevel}}}
+  Objetivos: {{{goals}}}
+  Equipamento Disponível: {{{availableEquipment}}}
 
-  Workout Plan:`, // Ensure this is valid Handlebars.
+  Plano de Treino:`, // Ensure this is valid Handlebars.
 });
 
 const generatePersonalizedWorkoutPlanFlow = ai.defineFlow(

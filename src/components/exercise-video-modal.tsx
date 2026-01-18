@@ -27,8 +27,7 @@ export function ExerciseVideoModal({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
-            Watch this video to ensure you're performing the exercise correctly
-            and safely.
+            Assista a este vídeo para garantir que você está executando o exercício de forma correta e segura.
           </DialogDescription>
         </DialogHeader>
         <div className="aspect-video overflow-hidden rounded-lg">
@@ -36,7 +35,7 @@ export function ExerciseVideoModal({
             width="100%"
             height="100%"
             src={videoUrl}
-            title={`YouTube video player for ${title}`}
+            title={`Player de vídeo do YouTube para ${title}`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           ></iframe>
