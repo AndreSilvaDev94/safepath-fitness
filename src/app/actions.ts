@@ -10,15 +10,10 @@ import { z } from 'zod';
 const goalOptions = [
   'Ganhar Massa Muscular (Hipertrofia)',
   'Perder Gordura / Emagrecimento',
-  'Definição Muscular',
-  'Condicionamento / Resistência',
 ] as const;
 
 const equipmentOptions = [
   'Academia Completa (Máquinas e Pesos)',
-  'Treino em Casa (Apenas Halteres/Pesos Livres)',
-  'Peso do Corpo (Calistenia/Sem Equipamentos)',
-  'Misto (Peso do corpo + Elásticos)',
 ] as const;
 
 const formSchema = z.object({

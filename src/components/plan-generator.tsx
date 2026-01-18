@@ -37,17 +37,7 @@ import { Loader2 } from 'lucide-react';
 const goalOptions = [
   'Ganhar Massa Muscular (Hipertrofia)',
   'Perder Gordura / Emagrecimento',
-  'Definição Muscular',
-  'Condicionamento / Resistência',
 ] as const;
-
-const equipmentOptions = [
-  'Academia Completa (Máquinas e Pesos)',
-  'Treino em Casa (Apenas Halteres/Pesos Livres)',
-  'Peso do Corpo (Calistenia/Sem Equipamentos)',
-  'Misto (Peso do corpo + Elásticos)',
-] as const;
-
 
 const formSchema = z.object({
   fitnessLevel: z.enum(['beginner', 'intermediate', 'advanced'], {
@@ -55,9 +45,6 @@ const formSchema = z.object({
   }),
   goals: z.enum(goalOptions, {
     required_error: 'Por favor, selecione um objetivo.',
-  }),
-  availableEquipment: z.enum(equipmentOptions, {
-    required_error: 'Por favor, selecione o equipamento disponível.',
   }),
 });
 
@@ -84,7 +71,10 @@ export function PlanGenerator({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    const result = await getWorkoutPlanAction(values);
+    const result = await getWorkoutPlanAction({
+      ...values,
+      availableEquipment: 'Academia Completa (Máquinas e Pesos)',
+    });
     setIsSubmitting(false);
 
     if (result.error) {
@@ -154,28 +144,6 @@ export function PlanGenerator({
                     </FormControl>
                     <SelectContent>
                       {goalOptions.map((option) => (
-                        <SelectItem key={option} value={option}>{option}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="availableEquipment"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Equipamento que Você Tem Acesso</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione seu tipo de equipamento" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                       {equipmentOptions.map((option) => (
                         <SelectItem key={option} value={option}>{option}</SelectItem>
                       ))}
                     </SelectContent>
