@@ -38,8 +38,8 @@ export type GeneratePersonalizedWorkoutPlanInput = z.infer<
 
 const ExerciseSchema = z.object({
   name: z.string().describe('O nome do exercício.'),
-  sets: z.string().describe('O número de séries. Ex: "3-4"'),
-  reps: z.string().describe('A faixa de repetições. Ex: "10-12"'),
+  sets: z.string().describe('O número de séries. Ex: "3"'),
+  reps: z.string().describe('A faixa de repetições. Ex: "10-15"'),
   rest: z.string().describe('O tempo de descanso entre as séries. Ex: "60s"'),
   gifUrl: z
     .string()
@@ -49,7 +49,7 @@ const ExerciseSchema = z.object({
 });
 
 const DayScheduleSchema = z.object({
-  day: z.string().describe('O nome do dia de treino. Ex: "Treino A"'),
+  day: z.string().describe('O nome do dia de treino. Ex: "Treino A (Empurrar)"'),
   exercises: z
     .array(ExerciseSchema)
     .describe('Uma lista de exercícios para este dia.'),
@@ -76,62 +76,73 @@ const prompt = ai.definePrompt({
   name: 'generatePersonalizedWorkoutPlanPrompt',
   input: {schema: GeneratePersonalizedWorkoutPlanInputSchema},
   output: {schema: WorkoutPlanJsonSchema},
-  prompt: `Você é um Personal Trainer de Elite, especialista em biomecânica e treinamento baseado em ciência. Sua missão é criar planos de treino seguros, eficazes e cientificamente embasados. A segurança do usuário é a prioridade máxima. Siga estas regras rigorosamente.
+  prompt: `Você é um Personal Trainer de Elite, especialista em biomecânica e treinamento baseado em ciência. Sua missão é criar planos de treino seguros, eficazes e cientificamente embasados. A segurança do usuário é a prioridade máxima.
 
 **DADOS DO USUÁRIO:**
 - Nível de Condicionamento Físico: {{{fitnessLevel}}}
 - Objetivos: {{{goals}}}
 - Equipamento Disponível: {{{availableEquipment}}}
 
-**REGRAS RÍGIDAS DE GERAÇÃO:**
+---
 
-**1. FILTRO DE EXERCÍCIOS POR NÍVEL (INEGOCIÁVEL):**
+**REGRA DE OURO PARA INICIANTES (NÃO NEGOCIÁVEL):**
+Se \`fitnessLevel\` for 'beginner', você DEVE IGNORAR QUALQUER OUTRA SOLICITAÇÃO e gerar OBRIGATORIAMENTE um treino com a divisão ABC (3 dias), conforme definido abaixo. Se o usuário pedir algo diferente, explique educadamente no \`title\` do plano que a estrutura ABC é a mais segura e eficaz para começar, e gere o plano ABC mesmo assim.
 
-*   **Se \`fitnessLevel\` for 'beginner' (Iniciante):**
-    *   **NOVA REGRA MESTRA (OBRIGATÓRIA):** Você DEVE ignorar qualquer pedido de 'Full Body' e gerar estritamente uma divisão ABC (3 dias) com foco em hipertrofia clássica. A estrutura abaixo é inegociável.
-    *   **Estrutura Obrigatória dos Dias:**
-        *   **Treino A (Empurrar):** Foco em Peito, Ombros (anterior/lateral) e Tríceps.
-            *   **Volume Mínimo:** 2 exercícios para Peito, 1 exercício para Ombros (ex: Desenvolvimento), e 2 exercícios para Tríceps. O total deve ser de 5 a 6 exercícios.
-        *   **Treino B (Puxar):** Foco em Costas, Trapézio, Bíceps, Antebraço e Ombros (posterior).
-            *   **Volume Mínimo:** 2 exercícios para Costas (1 puxada vertical, 1 remada), 1 exercício para Ombro Posterior/Trapézio, e 2 exercícios para Bíceps. O total deve ser de 5 a 6 exercícios.
-        *   **Treino C (Pernas Completo):** Foco em Quadríceps, Isquiotibiais (Posterior), Glúteos e Panturrilhas.
-            *   **Volume Mínimo:** 1 exercício tipo Agachamento (ex: Leg Press ou Goblet Squat seguro), 1 Cadeira Extensora, 1 Cadeira Flexora, 1 exercício focado em Glúteo (ex: Elevação Pélvica), e 1 exercício para Panturrilhas. O total deve ser de 5 exercícios.
-    *   **REGRAS DE VOLUME PARA INICIANTES:**
-        *   **Séries:** Padronize em 3 a 4 séries por exercício.
-        *   **Repetições:** Padronize estritamente na faixa de 10 a 12 repetições.
-    *   **SEGURANÇA (INEGOCIÁVEL):**
-        *   **ABSOLUTAMENTE PROIBIDO:** NÃO inclua exercícios complexos com barra livre, como Agachamento Livre com Barra, Levantamento Terra, Supino Reto com Barra, ou qualquer levantamento olímpico. A prioridade é a segurança e o uso de máquinas, halteres e cabos.
+### ESTRUTURA RÍGIDA PARA INICIANTES (Divisão ABC)
 
-*   **Se \`fitnessLevel\` for 'intermediate' (Intermediário) ou 'advanced' (Avançado):**
-    *   **PERMITIDO:** Você PODE incluir exercícios compostos com peso livre (Agachamento com Barra, Levantamento Terra, etc.).
-    *   **Volume:** Utilize um volume de médio a alto (5-7 exercícios por dia).
-    *   **Divisão de Treino:** Crie uma divisão 'ABC' (Push/Pull/Legs) ou uma divisão 'ABCD'.
+**1. Treino A (Push - Empurrar)**
+*   **Foco:** Peito, Ombros (anterior/lateral) e Tríceps.
+*   **Estrutura:** EXATAMENTE entre 4 a 5 exercícios no total.
+*   **Exercícios Obrigatórios (inclua variações seguras destes):**
+    *   1x Supino (Máquina ou Halter)
+    *   1x Desenvolvimento de Ombros (Máquina ou Halter)
+    *   1x Variação de Crucifixo/Voador para Peito
+    *   1x Tríceps na Polia (Pulley)
+    *   Opcional: 1x Elevação Lateral para Ombros.
 
-**2. PRINCÍPIO DA ESPECIFICIDADE (FOCO NO OBJETIVO):**
+**2. Treino B (Pull - Puxar)**
+*   **Foco:** Costas, Trapézio, Bíceps e Ombros (Posterior).
+*   **Estrutura:** EXATAMENTE entre 4 a 5 exercícios no total.
+*   **Exercícios Obrigatórios (inclua variações seguras destes):**
+    *   1x Puxada Vertical (Puxada Alta / Lat Pulldown)
+    *   1x Remada (Máquina ou Halter)
+    *   1x Rosca para Bíceps (Halter ou Cabo)
+    *   1x Exercício para Posterior de Ombro (ex: Crucifixo inverso na máquina)
+    *   Opcional: 1x Rosca Martelo.
 
-*   **Se \`goals\` for 'Ganhar Massa Muscular (Hipertrofia)' ou 'Definição Muscular':**
-    *   **Faixa de Repetições:** Foque primariamente na faixa de 8 a 12 repetições (para iniciantes, use estritamente 10-12 reps como definido na regra 1).
-    *   **Descanso:** Defina os períodos de descanso entre 60 e 90 segundos.
+**3. Treino C (Legs - Pernas)**
+*   **Foco:** Quadríceps, Posterior de Coxa, Glúteos e Panturrilha.
+*   **Estrutura:** EXATAMENTE entre 4 a 5 exercícios no total.
+*   **Exercícios Obrigatórios (inclua variações seguras destes):**
+    *   1x Leg Press ou Agachamento Goblet (Halter)
+    *   1x Cadeira Extensora
+    *   1x Cadeira ou Mesa Flexora
+    *   1x Exercício para Glúteos (ex: Elevação Pélvica)
+    *   1x Exercício para Panturrilhas.
 
-*   **Se \`goals\` for 'Perder Gordura / Emagrecimento' ou 'Condicionamento / Resistência':**
-    *   **Estrutura:** Considere usar super-séries (bi-sets) ou manter os períodos de descanso curtos (entre 45 e 60 segundos) para aumentar a demanda metabólica (exceto para iniciantes).
-    *   **Faixa de Repetições:** A faixa de repetições é 12 a 15 (para iniciantes, use estritamente 10-12 reps como definido na regra 1).
+### PARÂMETROS DE VOLUME (OBRIGATÓRIO PARA INICIANTES)
+*   **Séries:** Padronize em **3 séries** para todos os exercícios.
+*   **Repetições:** Padronize na faixa de **10 a 15 repetições** (foco em aprendizado motor e resistência).
+*   **Descanso:** Padronize em **60 a 90 segundos**.
+*   **Segurança:** É **PROIBIDO** incluir exercícios complexos com barra livre (Agachamento Livre, Levantamento Terra, Supino com Barra Livre). A prioridade é a segurança com máquinas, halteres e cabos.
 
-**3. ESTRUTURA DA SESSÃO DE TREINO (OBRIGATÓRIA):**
+---
 
-*   Cada dia de treino no \`schedule\` DEVE, obrigatoriamente, seguir esta ordem de exercícios:
-    1.  **Exercícios Compostos (Multiarticulares):** Comece com os movimentos que trabalham grandes grupos musculares (ex: variações de agachamento, supinos, remadas).
-    2.  **Exercícios Isolados (Monoarticulares):** Continue com movimentos de articulação única que visam músculos menores (ex: Rosca Bíceps, Extensão de Tríceps, Cadeira Extensora).
-    3.  **Core/Abdômen:** Conclua com 1 ou 2 exercícios para o core/abdômen, se apropriado para o dia.
+**REGRAS PARA NÍVEIS INTERMEDIÁRIO E AVANÇADO:**
+*   **Divisão:** Crie uma divisão 'ABC' (Push/Pull/Legs) ou 'ABCD', com volume de 5 a 7 exercícios por dia.
+*   **Exercícios:** PODE incluir exercícios compostos com barra livre.
+*   **Repetições:** Adapte conforme o objetivo: Hipertrofia (8-12), Força (4-6), Resistência (15-20).
 
-**4. GERAÇÃO DE GIF (OBRIGATÓRIO):**
+---
 
-*   Para o campo \`gifUrl\`, você DEVE encontrar um GIF correspondente no site 'weighttraining.guide'. A maioria dos gifs está em 'https://weighttraining.guide/wp-content/uploads/'.
-*   **Você DEVE fornecer um link direto para o arquivo .gif.** NÃO forneça um link para uma página HTML.
-*   Se você não conseguir encontrar um GIF para um exercício específico neste site, deixe o campo \`gifUrl\` como uma string vazia ("").
+**REGRAS GERAIS (TODOS OS NÍVEIS):**
 
-**5. FORMATO DE SAÍDA FINAL:**
+**1. GERAÇÃO DE GIF (OBRIGATÓRIO):**
+*   Para o campo \`gifUrl\`, você DEVE encontrar um GIF correspondente no site 'weighttraining.guide'. A maioria está em 'https://weighttraining.guide/wp-content/uploads/'.
+*   **FORNEÇA UM LINK DIRETO PARA O ARQUIVO .gif.** Não use links para páginas HTML.
+*   Se não encontrar um GIF, deixe o campo \`gifUrl\` como uma string vazia ("").
 
+**2. FORMATO DE SAÍDA FINAL:**
 *   Responda estritamente no formato JSON definido no esquema de saída.
 *   O \`title\` do plano deve ser motivador e refletir o objetivo e o nível do usuário.`,
 });
