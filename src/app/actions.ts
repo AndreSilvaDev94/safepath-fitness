@@ -29,6 +29,6 @@ export async function getWorkoutPlanAction(values: unknown) {
     return { data: result.workoutPlan };
   } catch (error) {
     console.error('Error generating workout plan:', error);
-    return { error: 'Ocorreu um erro inesperado. Por favor, tente novamente.' };
+    return { error: 'Houve um problema ao se comunicar com a IA para gerar seu treino. Por favor, tente novamente mais tarde.' };
   }
 }
