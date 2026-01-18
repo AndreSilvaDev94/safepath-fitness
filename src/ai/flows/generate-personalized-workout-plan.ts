@@ -90,25 +90,31 @@ const prompt = ai.definePrompt({
 **1. FILTRO DE EXERCÍCIOS POR NÍVEL (INEGOCIÁVEL):**
 
 *   **Se \`fitnessLevel\` for 'beginner' (Iniciante):**
-    *   **ABSOLUTAMENTE PROIBIDO:** NÃO inclua exercícios complexos com barra livre, como Agachamento Livre, Levantamento Terra, Supino Reto com Barra, Desenvolvimento com Barra ou qualquer levantamento olímpico (Arranco, Arremesso).
-    *   **PERMITIDO E PREFERENCIAL:** Priorize Máquinas (ex: Leg Press, Máquina de Supino), Halteres (ex: Supino com Halteres, Agachamento Goblet), Cabos e exercícios com Peso do Corpo.
-    *   **Volume:** Mantenha o volume total de séries de trabalho por treino baixo, entre 9 a 12 séries.
-    *   **Divisão de Treino:** Crie uma divisão 'Full Body' (Corpo Inteiro) ou 'Upper/Lower' (Superior/Inferior). Não crie divisões 'Push/Pull/Legs' ou por grupamentos musculares isolados (ex: A-Peito, B-Costas).
+    *   **DIVISÃO DE TREINO OBRIGATÓRIA (ABC):** Você DEVE criar um plano de 3 dias seguindo estritamente esta divisão:
+        *   **Treino A (Push - Empurrar):** Foco em Peito, Ombros (anterior/lateral) e Tríceps. Deve incluir obrigatoriamente uma variação de Supino (com máquina ou halteres), uma variação de Desenvolvimento de Ombros e um exercício para Tríceps (ex: Tríceps Pulley).
+        *   **Treino B (Pull - Puxar):** Foco em Costas, Trapézio, Bíceps e ombros posteriores. Deve incluir obrigatoriamente uma Puxada Vertical (ex: Puxada Alta/Lat Pulldown), uma Remada (ex: Remada na máquina ou com halteres) e uma Rosca para Bíceps.
+        *   **Treino C (Legs - Pernas):** Foco em Quadríceps, Isquiotibiais (Posterior), Glúteos e Panturrilhas. Deve incluir obrigatoriamente Leg Press ou uma variação segura de agachamento (ex: Agachamento Goblet), Cadeira Extensora e Cadeira Flexora.
+    *   **VOLUME E INTENSIDADE:**
+        *   Cada treino deve ter entre 4 a 5 exercícios no total.
+        *   Para cada exercício, prescreva 3 séries.
+        *   A faixa de repetições deve ser entre 10 e 15, focando no aprendizado motor e resistência.
+    *   **SEGURANÇA (INEGOCIÁVEL):**
+        *   **ABSOLUTAMENTE PROIBIDO:** NÃO inclua exercícios complexos com barra livre, como Agachamento Livre com Barra, Levantamento Terra, Supino Reto com Barra, ou qualquer levantamento olímpico. A prioridade é a segurança e a técnica correta.
 
 *   **Se \`fitnessLevel\` for 'intermediate' (Intermediário) ou 'advanced' (Avançado):**
     *   **PERMITIDO:** Você PODE incluir exercícios compostos com peso livre (Agachamento com Barra, Levantamento Terra, etc.).
     *   **Volume:** Utilize um volume de médio a alto.
-    *   **Divisão de Treino:** Crie uma divisão 'ABC' (Empurrar/Puxar/Pernas) ou uma divisão 'ABCD'.
+    *   **Divisão de Treino:** Crie uma divisão 'ABC' (Push/Pull/Legs) ou uma divisão 'ABCD'.
 
 **2. PRINCÍPIO DA ESPECIFICIDADE (FOCO NO OBJETIVO):**
 
 *   **Se \`goals\` for 'Ganhar Massa Muscular (Hipertrofia)' ou 'Definição Muscular':**
-    *   **Faixa de Repetições:** Foque primariamente na faixa de 8 a 12 repetições.
+    *   **Faixa de Repetições:** Foque primariamente na faixa de 8 a 12 repetições (exceto para iniciantes, que devem seguir a regra de 10-15 reps).
     *   **Descanso:** Defina os períodos de descanso entre 60 e 90 segundos.
 
 *   **Se \`goals\` for 'Perder Gordura / Emagrecimento' ou 'Condicionamento / Resistência':**
-    *   **Estrutura:** Considere usar super-séries (bi-sets) ou manter os períodos de descanso curtos (entre 45 e 60 segundos) para aumentar a demanda metabólica.
-    *   **Faixa de Repetições:** Pode ser um pouco mais alta, como 12 a 15 repetições.
+    *   **Estrutura:** Considere usar super-séries (bi-sets) ou manter os períodos de descanso curtos (entre 45 e 60 segundos) para aumentar a demanda metabólica (exceto para iniciantes).
+    *   **Faixa de Repetições:** A faixa de repetições é 12 a 15 (para iniciantes, mantenha 10-15).
 
 **3. ESTRUTURA DA SESSÃO DE TREINO (OBRIGATÓRIA):**
 
