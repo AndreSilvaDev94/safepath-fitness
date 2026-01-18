@@ -24,39 +24,64 @@ export type GeneratePersonalizedWorkoutPlanInput = z.infer<
   typeof GeneratePersonalizedWorkoutPlanInputSchema
 >;
 
-const GeneratePersonalizedWorkoutPlanOutputSchema = z.object({
-  workoutPlan: z.string().describe('O plano de treino personalizado.'),
+const ExerciseSchema = z.object({
+  name: z.string().describe('O nome do exercício.'),
+  sets: z.string().describe('O número de séries. Ex: "3"'),
+  reps: z.string().describe('A faixa de repetições. Ex: "10-12"'),
+  rest: z.string().describe('O tempo de descanso entre as séries. Ex: "60s"'),
+  videoSearchTerm: z
+    .string()
+    .describe(
+      'Um termo de busca conciso para encontrar um vídeo de execução no YouTube.'
+    ),
 });
-export type GeneratePersonalizedWorkoutPlanOutput = z.infer<
-  typeof GeneratePersonalizedWorkoutPlanOutputSchema
->;
+
+const DayScheduleSchema = z.object({
+  day: z.string().describe('O nome do dia de treino. Ex: "Treino A"'),
+  exercises: z
+    .array(ExerciseSchema)
+    .describe('Uma lista de exercícios para este dia.'),
+});
+
+const WorkoutPlanJsonSchema = z.object({
+  title: z
+    .string()
+    .describe('Um nome criativo e motivador para o plano de treino.'),
+  schedule: z
+    .array(DayScheduleSchema)
+    .describe('Um array de programações de dias de treino.'),
+});
+
+export type GeneratedWorkoutPlan = z.infer<typeof WorkoutPlanJsonSchema>;
 
 export async function generatePersonalizedWorkoutPlan(
   input: GeneratePersonalizedWorkoutPlanInput
-): Promise<GeneratePersonalizedWorkoutPlanOutput> {
+): Promise<GeneratedWorkoutPlan> {
   return generatePersonalizedWorkoutPlanFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'generatePersonalizedWorkoutPlanPrompt',
   input: {schema: GeneratePersonalizedWorkoutPlanInputSchema},
-  output: {schema: GeneratePersonalizedWorkoutPlanOutputSchema},
-  prompt: `Você é um personal trainer especializado em criar planos de treino para iniciantes.
+  output: {schema: WorkoutPlanJsonSchema},
+  prompt: `Você é um personal trainer de elite especializado em criar planos de treino eficazes e seguros para iniciantes que treinam sozinhos.
+  Sua tarefa é gerar um plano de treino em formato JSON estruturado. O plano deve ser dividido em dias (ex: Treino A, Treino B).
 
-  Com base no nível de condicionamento físico, objetivos e equipamentos disponíveis do usuário, crie um plano de treino personalizado.
+  Responda estritamente no formato JSON definido no esquema de saída.
 
-  Nível de Condicionamento Físico: {{{fitnessLevel}}}
-  Objetivos: {{{goals}}}
-  Equipamento Disponível: {{{availableEquipment}}}
+  Com base nas seguintes informações do usuário:
+  - Nível de Condicionamento Físico: {{{fitnessLevel}}}
+  - Objetivos: {{{goals}}}
+  - Equipamento Disponível: {{{availableEquipment}}}
 
-  Plano de Treino:`, // Ensure this is valid Handlebars.
+  Crie um plano de treino claro, conciso e motivador. Para 'videoSearchTerm', use o nome do exercício em inglês para melhores resultados de busca.`,
 });
 
 const generatePersonalizedWorkoutPlanFlow = ai.defineFlow(
   {
     name: 'generatePersonalizedWorkoutPlanFlow',
     inputSchema: GeneratePersonalizedWorkoutPlanInputSchema,
-    outputSchema: GeneratePersonalizedWorkoutPlanOutputSchema,
+    outputSchema: WorkoutPlanJsonSchema,
   },
   async input => {
     const {output} = await prompt(input);

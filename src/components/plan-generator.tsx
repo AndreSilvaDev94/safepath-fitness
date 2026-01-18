@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { getWorkoutPlanAction } from '@/app/actions';
+import type { GeneratedWorkoutPlan } from '@/ai/flows/generate-personalized-workout-plan';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -51,7 +52,7 @@ const formSchema = z.object({
 type PlanGeneratorProps = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  onPlanGenerated: (plan: string) => void;
+  onPlanGenerated: (plan: GeneratedWorkoutPlan) => void;
 };
 
 export function PlanGenerator({
@@ -73,15 +74,11 @@ export function PlanGenerator({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    const result: any = await getWorkoutPlanAction(values);
+    const result = await getWorkoutPlanAction(values);
     setIsSubmitting(false);
 
     if (result.error) {
-      if (result.errorDetails) {
-        console.error(result.errorDetails);
-      } else if (result.details) {
-        console.error(result.details);
-      }
+      console.error(result.errorDetails || result.details || result.error);
       toast({
         variant: 'destructive',
         title: 'Erro ao Gerar Plano',

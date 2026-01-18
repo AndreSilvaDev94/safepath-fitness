@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Regras para a coleção 'users'
+    match /users/{userId} {
+      // Qualquer usuário autenticado pode criar seu próprio perfil de usuário.
+      allow create: if request.auth != null && request.auth.uid == userId;
+      
+      // Apenas o proprietário do perfil pode ler, atualizar ou deletar seus dados.
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Regras para a subcoleção 'plans'
+    match /users/{userId}/plans/{planId} {
+      // O proprietário do perfil pode criar, ler, atualizar e deletar seus próprios planos.
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
