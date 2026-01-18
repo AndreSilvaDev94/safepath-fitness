@@ -1,17 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Dumbbell } from 'lucide-react';
+import { Dumbbell, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { getInitialWorkoutPlan, progressData } from '@/lib/placeholder-data';
-import type { WorkoutPlan } from '@/lib/types';
-import WorkoutPlanDisplay from '@/components/workout-plan';
-import ProgressOverview from '@/components/progress-overview';
 import { PlanGenerator } from '@/components/plan-generator';
 
 export default function Home() {
-  const [workoutPlan] = useState<WorkoutPlan>(getInitialWorkoutPlan());
   const [generatedPlan, setGeneratedPlan] = useState<string | null>(null);
   const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
 
@@ -21,66 +16,58 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
-        <nav className="flex w-full items-center gap-6 text-lg font-medium md:text-sm">
-          <a
-            href="#"
-            className="flex items-center gap-2 text-lg font-semibold md:text-base"
-          >
-            <Dumbbell className="h-6 w-6 text-primary" />
-            <span className="font-headline text-xl">SafePath Fitness</span>
-          </a>
-          <div className="ml-auto">
-            <Button onClick={() => setIsGeneratorOpen(true)}>
-              Gerar Novo Plano com IA
-            </Button>
-          </div>
-        </nav>
-        <PlanGenerator
-          isOpen={isGeneratorOpen}
-          setIsOpen={setIsGeneratorOpen}
-          onPlanGenerated={handlePlanGenerated}
-        />
-      </header>
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="mx-auto w-full max-w-6xl">
-          <h1 className="text-3xl font-bold font-headline tracking-tight">
-            Seu Painel
-          </h1>
-          <p className="text-muted-foreground">
-            Bem-vindo de volta! Aqui está o seu caminho seguro para hoje. Você está no caminho certo.
-          </p>
-        </div>
-
-        {generatedPlan && (
-          <div className="mx-auto w-full max-w-6xl">
-            <Card className="bg-accent/50 border-accent">
-              <CardHeader>
-                <CardTitle>Seu Novo Plano de Treino Gerado por IA</CardTitle>
-                <CardDescription>
-                  Aqui está o plano de treino personalizado criado para você.
-                  Você pode copiá-lo e começar a seguir sua nova rotina.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <pre className="whitespace-pre-wrap rounded-md bg-background/50 p-4 font-body text-sm">
-                  {generatedPlan}
-                </pre>
-              </CardContent>
-            </Card>
-          </div>
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <main className="flex flex-1 flex-col items-center justify-center gap-6 p-4 text-center">
+        {generatedPlan ? (
+            <div className="mx-auto w-full max-w-3xl animate-in fade-in-50 duration-500">
+                <Card>
+                <CardHeader>
+                    <CardTitle>Seu Novo Plano de Treino!</CardTitle>
+                    <CardDescription>
+                    Aqui está o plano de treino personalizado que nossa IA criou para você.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <pre className="whitespace-pre-wrap rounded-md bg-muted/50 p-4 text-left font-body text-sm">
+                    {generatedPlan}
+                    </pre>
+                    <Button
+                    size="lg"
+                    className="mt-6 w-full"
+                    onClick={() => setIsGeneratorOpen(true)}
+                    >
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Gerar Outro Plano
+                    </Button>
+                </CardContent>
+                </Card>
+            </div>
+        ) : (
+            <div className="flex flex-col items-center gap-4 animate-in fade-in-50 duration-500">
+                <Dumbbell className="h-16 w-16 text-primary" />
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+                SafePath Fitness
+                </h1>
+                <p className="max-w-[42rem] text-lg text-muted-foreground">
+                Seu guia seguro para treinar sozinho.
+                </p>
+                <Button
+                size="lg"
+                className="mt-6"
+                onClick={() => setIsGeneratorOpen(true)}
+                >
+                <Sparkles className="mr-2 h-5 w-5" />
+                Gerar Treino com IA
+                </Button>
+            </div>
         )}
-
-        <div className="mx-auto grid w-full max-w-6xl gap-4 md:gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <WorkoutPlanDisplay plan={workoutPlan} />
-          </div>
-          <div className="lg:col-span-1">
-            <ProgressOverview data={progressData} />
-          </div>
-        </div>
       </main>
+
+      <PlanGenerator
+        isOpen={isGeneratorOpen}
+        setIsOpen={setIsGeneratorOpen}
+        onPlanGenerated={handlePlanGenerated}
+      />
     </div>
   );
 }
