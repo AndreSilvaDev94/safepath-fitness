@@ -15,9 +15,21 @@ const GeneratePersonalizedWorkoutPlanInputSchema = z.object({
   fitnessLevel: z
     .enum(['beginner', 'intermediate', 'advanced'])
     .describe('O nível de condicionamento físico do usuário.'),
-  goals: z.string().describe('Os objetivos de fitness do usuário.'),
+  goals: z
+    .enum([
+      'Ganhar Massa Muscular (Hipertrofia)',
+      'Perder Gordura / Emagrecimento',
+      'Definição Muscular',
+      'Condicionamento / Resistência',
+    ])
+    .describe('Os objetivos de fitness do usuário.'),
   availableEquipment: z
-    .string()
+    .enum([
+      'Academia Completa (Máquinas e Pesos)',
+      'Treino em Casa (Apenas Halteres/Pesos Livres)',
+      'Peso do Corpo (Calistenia/Sem Equipamentos)',
+      'Misto (Peso do corpo + Elásticos)',
+    ])
     .describe('O equipamento disponível para o usuário.'),
 });
 export type GeneratePersonalizedWorkoutPlanInput = z.infer<

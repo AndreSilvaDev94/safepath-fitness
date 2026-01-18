@@ -7,11 +7,26 @@ import {
 } from '@/ai/flows/generate-personalized-workout-plan';
 import { z } from 'zod';
 
+const goalOptions = [
+  'Ganhar Massa Muscular (Hipertrofia)',
+  'Perder Gordura / Emagrecimento',
+  'Definição Muscular',
+  'Condicionamento / Resistência',
+] as const;
+
+const equipmentOptions = [
+  'Academia Completa (Máquinas e Pesos)',
+  'Treino em Casa (Apenas Halteres/Pesos Livres)',
+  'Peso do Corpo (Calistenia/Sem Equipamentos)',
+  'Misto (Peso do corpo + Elásticos)',
+] as const;
+
 const formSchema = z.object({
   fitnessLevel: z.enum(['beginner', 'intermediate', 'advanced']),
-  goals: z.string().min(10, 'Por favor, descreva seus objetivos com mais detalhes.'),
-  availableEquipment: z.string().min(5, 'Por favor, liste pelo menos algum equipamento.'),
+  goals: z.enum(goalOptions),
+  availableEquipment: z.enum(equipmentOptions),
 });
+
 
 export async function getWorkoutPlanAction(values: unknown): Promise<{
     data?: GeneratedWorkoutPlan;

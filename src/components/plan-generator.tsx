@@ -32,21 +32,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
+
+const goalOptions = [
+  'Ganhar Massa Muscular (Hipertrofia)',
+  'Perder Gordura / Emagrecimento',
+  'Definição Muscular',
+  'Condicionamento / Resistência',
+] as const;
+
+const equipmentOptions = [
+  'Academia Completa (Máquinas e Pesos)',
+  'Treino em Casa (Apenas Halteres/Pesos Livres)',
+  'Peso do Corpo (Calistenia/Sem Equipamentos)',
+  'Misto (Peso do corpo + Elásticos)',
+] as const;
+
 
 const formSchema = z.object({
   fitnessLevel: z.enum(['beginner', 'intermediate', 'advanced'], {
     required_error: 'Por favor, selecione seu nível de condicionamento físico.',
   }),
-  goals: z
-    .string()
-    .min(10, 'Por favor, descreva seus objetivos em pelo menos 10 caracteres.')
-    .max(200, 'Os objetivos não podem exceder 200 caracteres.'),
-  availableEquipment: z
-    .string()
-    .min(5, 'Por favor, liste o equipamento em pelo menos 5 caracteres.')
-    .max(200, 'A lista de equipamentos não pode exceder 200 caracteres.'),
+  goals: z.enum(goalOptions, {
+    required_error: 'Por favor, selecione um objetivo.',
+  }),
+  availableEquipment: z.enum(equipmentOptions, {
+    required_error: 'Por favor, selecione o equipamento disponível.',
+  }),
 });
 
 type PlanGeneratorProps = {
@@ -67,8 +79,6 @@ export function PlanGenerator({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fitnessLevel: 'beginner',
-      goals: '',
-      availableEquipment: '',
     },
   });
 
@@ -136,12 +146,18 @@ export function PlanGenerator({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Seus Objetivos de Fitness</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="ex: ganhar massa muscular, perder peso, melhorar a resistência"
-                      {...field}
-                    />
-                  </FormControl>
+                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione seu principal objetivo" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {goalOptions.map((option) => (
+                        <SelectItem key={option} value={option}>{option}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -152,12 +168,18 @@ export function PlanGenerator({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Equipamento que Você Tem Acesso</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="ex: halteres, faixas de resistência, barra de pull-up"
-                      {...field}
-                    />
-                  </FormControl>
+                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione seu tipo de equipamento" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                       {equipmentOptions.map((option) => (
+                        <SelectItem key={option} value={option}>{option}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
