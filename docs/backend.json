@@ -4,11 +4,11 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UserProfile",
       "type": "object",
-      "description": "Represents a user's profile in the SafePath Fitness app.",
+      "description": "Represents a user profile in the SafePath Fitness application.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the UserProfile entity."
+          "description": "Unique identifier for the user profile."
         },
         "name": {
           "type": "string",
@@ -21,11 +21,11 @@
         },
         "fitnessLevel": {
           "type": "string",
-          "description": "User's self-assessed fitness level (e.g., beginner, intermediate, advanced)."
+          "description": "User's current fitness level (e.g., beginner, intermediate, advanced)."
         },
         "fitnessGoals": {
           "type": "string",
-          "description": "User's fitness goals (e.g., weight loss, muscle gain, general fitness)."
+          "description": "User's fitness goals (e.g, weight loss, muscle gain)"
         }
       },
       "required": [
@@ -40,11 +40,11 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "WorkoutPlan",
       "type": "object",
-      "description": "Represents a personalized workout plan generated for a user.",
+      "description": "Represents a workout plan generated for a user.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the WorkoutPlan entity."
+          "description": "Unique identifier for the workout plan."
         },
         "userProfileId": {
           "type": "string",
@@ -52,47 +52,41 @@
         },
         "name": {
           "type": "string",
-          "description": "Name of the workout plan (e.g., 'Beginner Full Body', 'Intermediate Strength')."
+          "description": "Name of the workout plan."
         },
         "description": {
           "type": "string",
           "description": "Description of the workout plan."
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "Date and time the workout plan was created.",
-          "format": "date-time"
         }
       },
       "required": [
         "id",
         "userProfileId",
         "name",
-        "description",
-        "createdAt"
+        "description"
       ]
     },
     "Exercise": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Exercise",
       "type": "object",
-      "description": "Represents a specific exercise in a workout plan.",
+      "description": "Represents an exercise in a workout plan.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the Exercise entity."
+          "description": "Unique identifier for the exercise."
         },
         "name": {
           "type": "string",
-          "description": "Name of the exercise (e.g., 'Squats', 'Push-ups')."
+          "description": "Name of the exercise."
         },
         "description": {
           "type": "string",
-          "description": "Description of the exercise and proper form."
+          "description": "Description of the exercise."
         },
         "videoUrl": {
           "type": "string",
-          "description": "URL of the exercise execution video.",
+          "description": "URL of the exercise video.",
           "format": "uri"
         }
       },
@@ -103,94 +97,69 @@
         "videoUrl"
       ]
     },
-    "WorkoutExercise": {
+    "WorkoutLog": {
       "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "WorkoutExercise",
+      "title": "WorkoutLog",
       "type": "object",
-      "description": "Represents an exercise within a workout, and how it should be performed.",
+      "description": "Represents a log of a user's workout session.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the WorkoutExercise entity."
-        },
-        "workoutPlanId": {
-          "type": "string",
-          "description": "Reference to WorkoutPlan. (Relationship: WorkoutPlan 1:N WorkoutExercise)"
-        },
-        "exerciseId": {
-          "type": "string",
-          "description": "Reference to Exercise. (Relationship: Exercise 1:N WorkoutExercise)"
-        },
-        "sets": {
-          "type": "number",
-          "description": "Number of sets for the exercise."
-        },
-        "reps": {
-          "type": "number",
-          "description": "Number of repetitions for each set."
-        }
-      },
-      "required": [
-        "id",
-        "workoutPlanId",
-        "exerciseId",
-        "sets",
-        "reps"
-      ]
-    },
-    "ExerciseLog": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "ExerciseLog",
-      "type": "object",
-      "description": "Represents a log of a user performing an exercise on a specific date.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the ExerciseLog entity."
+          "description": "Unique identifier for the workout log."
         },
         "userProfileId": {
           "type": "string",
-          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N ExerciseLog)"
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N WorkoutLog)"
         },
-        "workoutExerciseId": {
+        "workoutPlanId": {
           "type": "string",
-          "description": "Reference to WorkoutExercise. (Relationship: WorkoutExercise 1:N ExerciseLog)"
+          "description": "Reference to WorkoutPlan. (Relationship: WorkoutPlan 1:N WorkoutLog)"
+        },
+        "exerciseId": {
+          "type": "string",
+          "description": "Reference to Exercise. (Relationship: Exercise 1:N WorkoutLog)"
         },
         "date": {
           "type": "string",
-          "description": "Date the exercise was performed.",
+          "description": "Date of the workout session.",
           "format": "date-time"
         },
-        "weight": {
+        "sets": {
           "type": "number",
-          "description": "Weight used for the exercise (if applicable)."
+          "description": "Number of sets performed."
+        },
+        "reps": {
+          "type": "number",
+          "description": "Number of repetitions performed."
         }
       },
       "required": [
         "id",
         "userProfileId",
-        "workoutExerciseId",
-        "date"
+        "workoutPlanId",
+        "exerciseId",
+        "date",
+        "sets",
+        "reps"
       ]
     }
   },
   "auth": {
     "providers": [
       "password",
-      "anonymous",
-      "google.com"
+      "anonymous"
     ]
   },
   "firestore": {
     "structure": [
       {
-        "path": "/users/{userId}/profile",
+        "path": "/users/{userId}",
         "definition": {
           "entityName": "UserProfile",
           "schema": {
             "$ref": "#/backend/entities/UserProfile"
           },
-          "description": "Stores user profile information. Accessible only by the user with matching userId.",
+          "description": "Stores user profile data.  Accessible only by the user with matching userId. This ensures that users can only access their own profile data.",
           "params": [
             {
               "name": "userId",
@@ -206,7 +175,7 @@
           "schema": {
             "$ref": "#/backend/entities/WorkoutPlan"
           },
-          "description": "Stores workout plans for a specific user. Accessible only by the user with matching userId.",
+          "description": "Stores workout plans created by a user. Accessible only by the user with matching userId, via path-based ownership. The workoutPlanId uniquely identifies each plan within the user's collection.",
           "params": [
             {
               "name": "userId",
@@ -226,7 +195,7 @@
           "schema": {
             "$ref": "#/backend/entities/Exercise"
           },
-          "description": "Stores a global catalog of exercises.  No ownership restrictions; read access may be public.",
+          "description": "Stores exercise information.  Exercises are global and read-only. This supports QAPs as the app doesn't have to evaluate specific security rule logic for listing exercises.",
           "params": [
             {
               "name": "exerciseId",
@@ -236,50 +205,26 @@
         }
       },
       {
-        "path": "/users/{userId}/workoutPlans/{workoutPlanId}/workoutExercises/{workoutExerciseId}",
+        "path": "/users/{userId}/workoutLogs/{workoutLogId}",
         "definition": {
-          "entityName": "WorkoutExercise",
+          "entityName": "WorkoutLog",
           "schema": {
-            "$ref": "#/backend/entities/WorkoutExercise"
+            "$ref": "#/backend/entities/WorkoutLog"
           },
-          "description": "Stores workout exercises for a specific workout plan, owned by a specific user. Accessible only by the user with matching userId.",
+          "description": "Stores workout logs for a user. Accessible only by the user with matching userId, via path-based ownership. The workoutLogId uniquely identifies each workout log within the user's collection.",
           "params": [
             {
               "name": "userId",
               "description": "The unique identifier for the user."
             },
             {
-              "name": "workoutPlanId",
-              "description": "The unique identifier for the workout plan."
-            },
-            {
-              "name": "workoutExerciseId",
-              "description": "The unique identifier for the workout exercise."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/users/{userId}/exerciseLogs/{exerciseLogId}",
-        "definition": {
-          "entityName": "ExerciseLog",
-          "schema": {
-            "$ref": "#/backend/entities/ExerciseLog"
-          },
-          "description": "Stores exercise logs for a specific user. Accessible only by the user with matching userId.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user."
-            },
-            {
-              "name": "exerciseLogId",
-              "description": "The unique identifier for the exercise log."
+              "name": "workoutLogId",
+              "description": "The unique identifier for the workout log."
             }
           ]
         }
       }
     ],
-    "reasoning": "The Firestore structure is designed to ensure data isolation and facilitate secure access based on user ownership. Each user's data (profile, workout plans, exercises logs) is stored under their respective user ID, enabling path-based security rules. This eliminates the need for complex queries and ensures that users can only access their own data. The structure prioritizes simplicity for the user, which the design intends to reflect by being easily understood for simple data manipulation and querying.\n\n*   **Authorization Independence:** Achieved by structuring data around user-owned paths (`/users/{userId}`). Each user's data resides within their own document or subcollection, removing the need to `get()` parent document data to determine access. The `userProfileId` field in subcollections is not strictly for authorization, but rather data integrity and querying.\n*   **QAPs (Rules are not Filters):** Secure list operations are supported by the path-based ownership model. Rules can easily restrict list operations to only the current user's data (e.g., `list` all workout plans where `request.auth.uid == userId`)."
+    "reasoning": "The Firestore data structure is designed to provide a secure and scalable solution for the SafePath Fitness application, focusing on simplicity and clarity for beginner users. The design adheres to the principles of Authorization Independence, Structural Segregation, Access Modeling, and Data Clarity.\n\n**Authorization Independence:**\nUser-specific data is stored under the `/users/{userId}` path, ensuring that access control can be enforced based solely on the authenticated user's ID (`request.auth.uid`). The `UserProfile` data acts as the root for user-owned data. There are no denormalized authorization fields in `UserProfile`, as it is private data for each user. All subcollections are accessed using path-based ownership, ensuring atomic operations and clear authorization rules.\n\n**Structural Segregation:**\nThe database structure segregates data based on ownership. User profiles, workout plans, and workout logs are all stored under their respective user IDs. This separation ensures that each collection has a homogeneous security posture. For example, `/users/{userId}/workoutPlans/{workoutPlanId}` stores workout plans specific to a user, simplifying security rules because every document in the `workoutPlans` collection shares the same access control requirements.\n\n**Access Modeling:**\nPath-based ownership is used consistently throughout the structure.  Each user owns their `WorkoutPlan` and `WorkoutLog` documents, established by nesting them under the `/users/{userId}` path. This approach simplifies rules: only the authenticated user (`request.auth.uid`) has access to their own data.\n\n**QAPs (Rules are not Filters):**\nThe structure supports secure `list` operations. Because data is segregated by user, listing workout plans or workout logs only requires checking that the authenticated user ID matches the user ID in the path (`request.auth.uid == userId`). This prevents the need for filtering based on document content, which is an anti-pattern.\n\nIn summary, the recommended structure promotes clear, secure, and maintainable security rules by leveraging path-based ownership and avoiding complex hierarchical dependencies."
   }
 }

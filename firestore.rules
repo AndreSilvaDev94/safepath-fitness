@@ -1,131 +1,158 @@
 /**
- * Core Philosophy: This ruleset enforces a strict user-ownership model where all
- * personal fitness data is isolated and accessible only to the authenticated
- * user who owns it. This provides strong privacy and data protection.
+ * This ruleset enforces a strict user-ownership model for the SafePath Fitness application.
  *
- * Data Structure: All user-specific data, including profiles, workout plans, and
- * exercise logs, is nested under the path `/users/{userId}`. This hierarchical
- * structure allows for simple, path-based security rules that are highly
- * performant. A top-level `/exercises` collection serves as a global,
- * publicly-readable catalog of available exercises.
+ * Core Philosophy:
+ * The security model is centered around user privacy and data isolation. All data created by a
+ * user, such as their profile, workout plans, and workout logs, is accessible only to that user.
+ * This is achieved by nesting all user-specific data within a path that includes their unique user ID.
+ *
+ * Data Structure:
+ * - /users/{userId}: The root document for a user's private data, including their profile.
+ * - /users/{userId}/workoutPlans/{workoutPlanId}: A subcollection of workout plans owned by the user.
+ * - /users/{userId}/workoutLogs/{workoutLogId}: A subcollection of workout logs owned by the user.
+ * - /exercises/{exerciseId}: A top-level collection of global exercise data, which is publicly readable but not writable by clients.
  *
  * Key Security Decisions:
- * - User Isolation: A user can only read or write data within their own
- *   `/users/{userId}` data tree. Access to other users' data is strictly denied.
- * - Public Catalog: The `/exercises` collection is readable by anyone, including
- *   unauthenticated users, to allow the app to display available exercises.
- *   However, write access to this collection is disabled in the rules to prevent
- *   tampering. It should be managed via the Firebase console or a trusted backend.
- * - No User Listing: It is not possible to list all user documents in the
- *   `/users` collection, protecting user privacy.
- * - Relational Integrity: On creation, documents must contain an ID field (e.g.,
- *   `userProfileId`) that matches the corresponding ID in the path, ensuring
- *   data consistency. These IDs are immutable and cannot be changed on update.
+ * - Strict Ownership: A user can only read or write data within their own data tree (i.e., where the path's {userId} matches their authenticated UID).
+ * - No User Listing: The structure intentionally prevents the ability to query or list all users in the application.
+ * - Public Read-Only Data: The global '/exercises' collection is available for any client to read, ensuring the app can display exercise information efficiently, but it is locked down to prevent any client-side modifications.
+ * - Path-Based Authorization: Security decisions rely on the document path (`/users/{userId}`) rather than fields within documents. This avoids costly `get()` calls in rules and makes the security logic simpler and more performant.
+ * - Relational Integrity: On creation, documents inside a user's tree (e.g., a WorkoutPlan) must contain a `userProfileId` field that correctly references the parent user, ensuring data consistency. This ownership link is immutable once set.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper functions for improved readability and reuse.
+    //-------------------------------------------------------------------------
+    // Helper Functions
+    //-------------------------------------------------------------------------
 
     /**
-     * Checks if a user is authenticated.
+     * Checks if the user is authenticated.
      */
     function isSignedIn() {
       return request.auth != null;
     }
 
     /**
-     * Checks if the currently authenticated user's UID matches the provided userId.
-     * This is the primary function for enforcing data ownership.
+     * Checks if the currently authenticated user's ID matches the provided userId.
+     * This is the primary function for enforcing document and collection ownership.
      */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
     /**
-     * Ensures an operation is performed by the owner on an existing document.
-     * Crucial for preventing modification or deletion of non-existent data.
+     * Checks if the user is the owner and the document already exists.
+     * Used for safe update and delete operations.
      */
     function isExistingOwner(userId) {
       return isOwner(userId) && resource != null;
     }
 
     /**
-     * @description Rules for a user's profile document.
-     * @path /users/{userId}
-     * @allow (create) An authenticated user creating their own profile document.
-     * @deny (get) A user trying to read another user's profile.
-     * @principle Enforces self-creation and ownership of a user's primary document.
+     * Validates that the incoming UserProfile document correctly links its ID
+     * to the user creating it.
      */
-    match /users/{userId} {
-      allow get: if isOwner(userId);
-      allow list: if false; // Disallow listing of all user profiles.
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-      allow delete: if isExistingOwner(userId);
-
-      /**
-       * @description Rules for a user's collection of workout plans.
-       * @path /users/{userId}/workoutPlans/{workoutPlanId}
-       * @allow (list) A user listing their own workout plans.
-       * @deny (create) A user trying to create a workout plan for another user.
-       * @principle Restricts access to a user's own data tree.
-       */
-      match /workoutPlans/{workoutPlanId} {
-        allow get: if isOwner(userId);
-        allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && request.resource.data.userProfileId == userId;
-        allow update: if isExistingOwner(userId) && request.resource.data.userProfileId == resource.data.userProfileId;
-        allow delete: if isExistingOwner(userId);
-
-        /**
-         * @description Rules for exercises within a specific workout plan.
-         * @path /users/{userId}/workoutPlans/{workoutPlanId}/workoutExercises/{workoutExerciseId}
-         * @allow (get) A user reading an exercise from one of their own workout plans.
-         * @deny (list) A user trying to list exercises from another user's plan.
-         * @principle Inherits ownership from the parent path, ensuring deep data security.
-         */
-        match /workoutExercises/{workoutExerciseId} {
-          allow get: if isOwner(userId);
-          allow list: if isOwner(userId);
-          allow create: if isOwner(userId) && request.resource.data.workoutPlanId == workoutPlanId;
-          allow update: if isExistingOwner(userId) && request.resource.data.workoutPlanId == resource.data.workoutPlanId;
-          allow delete: if isExistingOwner(userId);
-        }
-      }
-
-      /**
-       * @description Rules for a user's collection of exercise logs.
-       * @path /users/{userId}/exerciseLogs/{exerciseLogId}
-       * @allow (create) A user logging a new exercise they have completed.
-       * @deny (update) A user trying to modify another user's exercise log.
-       * @principle Restricts access to a user's own data tree.
-       */
-      match /exerciseLogs/{exerciseLogId} {
-        allow get: if isOwner(userId);
-        allow list: if isOwner(userId);
-        allow create: if isOwner(userId) && request.resource.data.userProfileId == userId;
-        allow update: if isExistingOwner(userId) && request.resource.data.userProfileId == resource.data.userProfileId;
-        allow delete: if isExistingOwner(userId);
-      }
+    function hasValidUserProfileData(userId) {
+      return request.resource.data.id == userId;
     }
 
     /**
-     * @description Rules for the global catalog of exercises.
+     * Enforces that the UserProfile's unique ID cannot be changed after creation.
+     */
+    function isImmutableUserProfileId() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    /**
+     * Validates that a new WorkoutPlan correctly references its owner via the 'userProfileId' field.
+     */
+    function hasValidWorkoutPlanData(userId) {
+      return request.resource.data.userProfileId == userId;
+    }
+
+    /**
+     * Enforces that the owner reference ('userProfileId') on a WorkoutPlan cannot be changed.
+     */
+    function isImmutableWorkoutPlanOwner() {
+      return request.resource.data.userProfileId == resource.data.userProfileId;
+    }
+
+    /**
+     * Validates that a new WorkoutLog correctly references its owner via the 'userProfileId' field.
+     */
+    function hasValidWorkoutLogData(userId) {
+      return request.resource.data.userProfileId == userId;
+    }
+
+    /**
+     * Enforces that the owner reference ('userProfileId') on a WorkoutLog cannot be changed.
+     */
+    function isImmutableWorkoutLogOwner() {
+      return request.resource.data.userProfileId == resource.data.userProfileId;
+    }
+
+
+    //-------------------------------------------------------------------------
+    // Collection Rules
+    //-------------------------------------------------------------------------
+
+    /**
+     * @description Secures a user's profile document.
+     * @path /users/{userId}
+     * @allow (create) An authenticated user creating their own profile document.
+     * @deny (get) An authenticated user trying to read another user's profile.
+     * @principle Restricts access to a user's own data tree and allows self-creation of a root profile.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; // Disallow listing all user profiles.
+      allow create: if isOwner(userId) && hasValidUserProfileData(userId);
+      allow update: if isExistingOwner(userId) && isImmutableUserProfileId();
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Secures workout plans, which are private to each user.
+     * @path /users/{userId}/workoutPlans/{workoutPlanId}
+     * @allow (create) An authenticated user creating a workout plan for themselves.
+     * @deny (list) An authenticated user trying to list another user's workout plans.
+     * @principle Enforces strict ownership based on the document's path.
+     */
+    match /users/{userId}/workoutPlans/{workoutPlanId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && hasValidWorkoutPlanData(userId);
+      allow update: if isExistingOwner(userId) && isImmutableWorkoutPlanOwner();
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Secures workout logs, which are private to each user.
+     * @path /users/{userId}/workoutLogs/{workoutLogId}
+     * @allow (update) An authenticated user updating their own workout log.
+     * @deny (delete) An authenticated user trying to delete another user's workout log.
+     * @principle Enforces strict ownership based on the document's path.
+     */
+    match /users/{userId}/workoutLogs/{workoutLogId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && hasValidWorkoutLogData(userId);
+      allow update: if isExistingOwner(userId) && isImmutableWorkoutLogOwner();
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Defines rules for the global, publicly readable collection of exercises.
      * @path /exercises/{exerciseId}
-     * @allow (get, list) Any user (authenticated or not) reading the list of available exercises.
-     * @deny (create, update, delete) Any user trying to modify the global exercise catalog.
-     * @principle Provides public read access for a global resource while restricting writes to prevent tampering.
+     * @allow (get, list) Any user, authenticated or not, reading exercise data.
+     * @deny (create, update, delete) Any user trying to modify the global exercise list.
+     * @principle Provides public read access for shared application data while prohibiting all client-side writes.
      */
     match /exercises/{exerciseId} {
-      allow get: if true;
-      allow list: if true;
-      // CRITICAL: Cannot implement owner-only writes. The 'Exercise' entity is missing an 'ownerId' or 'authorId' field.
-      // This collection should be populated via a trusted backend or the Firebase Console, not by clients.
-      allow create: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow update: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
-      allow delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow get, list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
   }
 }
