@@ -33,9 +33,15 @@ Este é um protótipo de uma aplicação web que utiliza Inteligência Artificia
     npm install
     ```
 
-4.  **Execute o servidor de desenvolvimento:**
+4.  **Configure as Variáveis de Ambiente:**
+    Para que a Inteligência Artificial funcione, você precisa de uma chave de API do Google.
+    *   Vá para o [Google AI Studio](https://makersuite.google.com/app/apikey) para criar sua chave de API gratuita.
+    *   Abra o arquivo `.env` que está na raiz do projeto.
+    *   Cole a chave que você criou, substituindo o texto `SUA_CHAVE_API_AQUI`.
+
+5.  **Execute o servidor de desenvolvimento:**
     ```bash
     npm run dev
     ```
 
-5.  Abra [http://localhost:9002](http://localhost:9002) no seu navegador para ver a aplicação.
+6.  Abra [http://localhost:9002](http://localhost:9002) no seu navegador para ver a aplicação.
