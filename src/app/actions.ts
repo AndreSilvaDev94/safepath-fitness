@@ -27,8 +27,11 @@ export async function getWorkoutPlanAction(values: unknown) {
   try {
     const result = await generatePersonalizedWorkoutPlan(validatedFields.data);
     return { data: result.workoutPlan };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error generating workout plan:', error);
-    return { error: 'Houve um problema ao se comunicar com a IA para gerar seu treino. Por favor, tente novamente mais tarde.' };
+    return { 
+      error: 'Houve um problema ao se comunicar com a IA para gerar seu treino. Por favor, tente novamente mais tarde.',
+      errorDetails: error.message || 'Um erro desconhecido ocorreu.'
+    };
   }
 }

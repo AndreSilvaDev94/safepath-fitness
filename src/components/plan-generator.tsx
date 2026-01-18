@@ -73,10 +73,15 @@ export function PlanGenerator({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    const result = await getWorkoutPlanAction(values);
+    const result: any = await getWorkoutPlanAction(values);
     setIsSubmitting(false);
 
     if (result.error) {
+      if (result.errorDetails) {
+        console.error(result.errorDetails);
+      } else if (result.details) {
+        console.error(result.details);
+      }
       toast({
         variant: 'destructive',
         title: 'Erro ao Gerar Plano',
