@@ -43,8 +43,6 @@ const ExerciseSchema = z.object({
   rest: z.string().describe('O tempo de descanso entre as séries. Ex: "60s"'),
   gifUrl: z
     .string()
-    .url()
-    .or(z.literal(''))
     .describe(
       "A URL para um GIF animado que demonstra o exercício. A URL deve apontar diretamente para um arquivo .gif. Se nenhum GIF for encontrado, retorne uma string vazia ''."
     ),
