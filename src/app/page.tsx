@@ -8,7 +8,7 @@ import { PlanGenerator } from '@/components/plan-generator';
 import WorkoutSheet from '@/components/workout-sheet';
 import type { GeneratedWorkoutPlan } from '@/ai/flows/generate-personalized-workout-plan';
 import { useUser, useAuth, useFirestore, addDocumentNonBlocking } from '@/firebase';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, type AuthError } from 'firebase/auth';
 import { collection, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
@@ -17,7 +17,7 @@ export default function Home() {
   const [generatedPlan, setGeneratedPlan] = useState<GeneratedWorkoutPlan | null>(null);
   const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const { user, loading: userLoading } = useUser();
+  const { user, isUserLoading } = useUser();
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
@@ -41,7 +41,8 @@ export default function Home() {
       }
 
       if (currentUser) {
-        addDocumentNonBlocking(collection(firestore, 'users', currentUser.uid, 'plans'), {
+        // Use a função não-bloqueante para salvar
+        addDocumentNonBlocking(collection(firestore, 'users', currentUser.uid, 'workoutPlans'), {
           ...generatedPlan,
           createdAt: serverTimestamp(),
           userId: currentUser.uid,
@@ -54,12 +55,20 @@ export default function Home() {
 
         router.push('/dashboard');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during save/login process: ", error);
+      const authError = error as AuthError;
+      let description = 'Não foi possível fazer login ou salvar seu plano. Verifique se os pop-ups estão ativados e tente novamente.';
+      if(authError.code === 'auth/operation-not-allowed'){
+        description = "Login com Google não está ativado no Firebase. Por favor, ative-o no console."
+      } else if (authError.code) {
+        description = `Ocorreu um erro de autenticação: ${authError.code}`;
+      }
+
       toast({
         variant: 'destructive',
         title: 'Erro no Login ou ao Salvar',
-        description: 'Não foi possível fazer login ou salvar seu plano. Verifique se os pop-ups estão ativados e tente novamente.',
+        description: description,
       });
     } finally {
       setIsSaving(false);
@@ -76,7 +85,7 @@ export default function Home() {
                 size="lg"
                 className="sticky bottom-5 mx-auto mt-6 flex animate-in fade-in zoom-in-95"
                 onClick={handleSaveAndStart}
-                disabled={isSaving || userLoading}
+                disabled={isSaving || isUserLoading}
               >
                 <Save className="mr-2 h-5 w-5" />
                 {isSaving ? 'Salvando...' : 'Salvar e Começar'}
