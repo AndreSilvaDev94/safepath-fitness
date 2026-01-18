@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "A calm and focused person working out.",
+      "imageUrl": "https://images.unsplash.com/photo-1576921876279-4e1b7304015d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwZXJzb24lMjB3b3JraW5nJTIwb3V0fGVufDB8fHx8MTc2ODc1MTk5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person working out"
+    },
+    {
+      "id": "squat",
+      "description": "Person performing a goblet squat.",
+      "imageUrl": "https://images.unsplash.com/photo-1718122095468-8528afd881ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnb2JsZXQlMjBzcXVhdHxlbnwwfHx8fDE3Njg3NTE5OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "goblet squat"
+    },
+    {
+      "id": "pushup",
+      "description": "Person performing a push-up.",
+      "imageUrl": "https://images.unsplash.com/photo-1638820858482-800bd51f63f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwdXNodXB8ZW58MHx8fHwxNzY4NjYzMDE5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pushup"
+    },
+    {
+      "id": "dumbbell-row",
+      "description": "Person performing a dumbbell row.",
+      "imageUrl": "https://images.unsplash.com/photo-1690577129311-4c0a7a130a36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkdW1iYmVsbCUyMHJvd3xlbnwwfHx8fDE3Njg2NjAwOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dumbbell row"
+    },
+    {
+      "id": "plank",
+      "description": "Person holding a plank.",
+      "imageUrl": "https://images.unsplash.com/photo-1727712824135-32f2edffd6d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwbGFua3xlbnwwfHx8fDE3Njg2NjMwMTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "plank"
+    },
+    {
+      "id": "romanian-deadlift",
+      "description": "Person performing a romanian deadlift.",
+      "imageUrl": "https://images.unsplash.com/photo-1717437175661-c18503e1edf3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyb21hbmlhbiUyMGRlYWRsaWZ0fGVufDB8fHx8MTc2ODY2MDA4OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "romanian deadlift"
+    },
+    {
+      "id": "overhead-press",
+      "description": "Person performing an overhead press.",
+      "imageUrl": "https://images.unsplash.com/photo-1597011872259-48fb0a53ffd2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxvdmVyaGVhZCUyMHByZXNzfGVufDB8fHx8MTc2ODY2MzQ0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "overhead press"
+    },
+    {
+      "id": "lat-pulldown",
+      "description": "Person performing a lat pulldown.",
+      "imageUrl": "https://images.unsplash.com/photo-1534872850130-5355701fcc89?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsYXQlMjBwdWxsZG93bnxlbnwwfHx8fDE3Njg2OTI0MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lat pulldown"
+    }
+  ]
 }
