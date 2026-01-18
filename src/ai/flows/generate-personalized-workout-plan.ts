@@ -96,9 +96,7 @@ Se \`fitnessLevel\` for 'beginner', você DEVE IGNORAR QUALQUER OUTRA SOLICITAÇ
 *   **Exercícios Obrigatórios (inclua variações seguras destes):**
     *   1x Supino (Máquina ou Halter)
     *   1x Desenvolvimento de Ombros (Máquina ou Halter)
-    *   1x Variação de Crucifixo/Voador para Peito
     *   1x Tríceps na Polia (Pulley)
-    *   Opcional: 1x Elevação Lateral para Ombros.
 
 **2. Treino B**
 *   **Foco:** Costas, Trapézio, Bíceps e Ombros (Posterior).
@@ -107,8 +105,6 @@ Se \`fitnessLevel\` for 'beginner', você DEVE IGNORAR QUALQUER OUTRA SOLICITAÇ
     *   1x Puxada Vertical (Puxada Alta / Lat Pulldown)
     *   1x Remada (Máquina ou Halter)
     *   1x Rosca para Bíceps (Halter ou Cabo)
-    *   1x Exercício para Posterior de Ombro (ex: Crucifixo inverso na máquina)
-    *   Opcional: 1x Rosca Martelo.
 
 **3. Treino C**
 *   **Foco:** Quadríceps, Posterior de Coxa, Glúteos e Panturrilha.
@@ -117,8 +113,6 @@ Se \`fitnessLevel\` for 'beginner', você DEVE IGNORAR QUALQUER OUTRA SOLICITAÇ
     *   1x Leg Press ou Agachamento Goblet (Halter)
     *   1x Cadeira Extensora
     *   1x Cadeira ou Mesa Flexora
-    *   1x Exercício para Glúteos (ex: Elevação Pélvica)
-    *   1x Exercício para Panturrilhas.
 
 ### PARÂMETROS DE VOLUME (OBRIGATÓRIO PARA INICIANTES)
 *   **Séries:** Padronize em **3 séries** para todos os exercícios.
@@ -128,21 +122,54 @@ Se \`fitnessLevel\` for 'beginner', você DEVE IGNORAR QUALQUER OUTRA SOLICITAÇ
 
 ---
 
-**REGRAS PARA NÍVEIS INTERMEDIÁRIO E AVANÇADO:**
-*   **Divisão:** Crie uma divisão 'ABC' (Push/Pull/Legs) ou 'ABCD', com volume de 5 a 7 exercícios por dia.
-*   **Exercícios:** PODE incluir exercícios compostos com barra livre.
-*   **Repetições:** Adapte conforme o objetivo: Hipertrofia (8-12), Força (4-6), Resistência (15-20).
+### REGRA MESTRA PARA INTERMEDIÁRIOS (Volume Específico)
+Se o nível do usuário for identificado como 'intermediate', você DEVE seguir rigorosamente a distribuição de volume abaixo para a montagem dos treinos. Não altere a quantidade de exercícios.
+
+**Treino A:**
+* **Foco:** Peitoral, Ombros e Tríceps.
+* **Volume:**
+    * Exatamente 4 exercícios para Peitoral.
+    * Exatamente 3 exercícios para Ombros.
+    * Exatamente 3 exercícios para Tríceps.
+* **Total do dia:** 10 exercícios.
+
+**Treino B:**
+* **Foco:** Costas e Bíceps.
+* **Volume:**
+    * Exatamente 5 exercícios para Costas.
+    * Exatamente 3 exercícios para Bíceps.
+* **Total do dia:** 8 exercícios.
+
+**Treino C:**
+* **Foco:** Membros Inferiores.
+* **Volume:** Exatamente 6 exercícios (distribuídos entre Quadríceps, Posterior, Glúteo e Panturrilha).
+* **Total do dia:** 6 exercícios.
+
+**Diretrizes de Intensidade para Intermediários:**
+* **Séries:** Padrão 3 a 4.
+* **Repetições:** 8 a 12 (Foco em hipertrofia).
+* **Descanso:** Pausas de 45s a 60s. Como o volume é alto (especialmente no Treino A), você pode sugerir técnicas avançadas como Drop-sets ou Bi-sets, se necessário para otimizar o tempo.
+
+---
+
+**REGRAS PARA NÍVEL AVANÇADO:**
+*   **Divisão:** Crie uma divisão 'ABC', 'ABCD' ou 'ABCDE' com alto volume e intensidade.
+*   **Exercícios:** PODE e DEVE incluir exercícios compostos complexos com barra livre.
+*   **Repetições:** Adapte conforme o objetivo: Hipertrofia (6-12), Força (1-5).
 
 ---
 
 **REGRAS GERAIS (TODOS OS NÍVEIS):**
 
-**1. GERAÇÃO DE GIF (OBRIGATÓRIO):**
+**1. NOME DO DIA:**
+*   Use apenas "Treino A", "Treino B", "Treino C", etc. para o campo \`day\`. Não inclua o tipo de treino no nome.
+
+**2. GERAÇÃO DE GIF (OBRIGATÓRIO):**
 *   Para o campo \`gifUrl\`, você DEVE encontrar um GIF correspondente no site 'weighttraining.guide'. A maioria está em 'https://weighttraining.guide/wp-content/uploads/'.
 *   **FORNEÇA UM LINK DIRETO PARA O ARQUIVO .gif.** Não use links para páginas HTML.
 *   Se não encontrar um GIF, deixe o campo \`gifUrl\` como uma string vazia ("").
 
-**2. FORMATO DE SAÍDA FINAL:**
+**3. FORMATO DE SAÍDA FINAL:**
 *   Responda estritamente no formato JSON definido no esquema de saída.
 *   O \`title\` do plano deve ser motivador e refletir o objetivo e o nível do usuário.`,
 });
